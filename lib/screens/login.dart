@@ -10,9 +10,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final List<List<String>> coffees = [
-    ['assets/images/coffee-4.jpg'],
+    ['assets/images/coffee-1.jpg'],
     ['assets/images/coffee-2.jpg'],
-    ['assets/images/coffee-1.jpg']
+    ['assets/images/coffee-4.jpg']
   ];
   int currentIndex = 0;
   void _next() {
