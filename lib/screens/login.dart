@@ -206,6 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
             IconButton(
                 onPressed: () {},
                 iconSize: 40,
+                color: Colors.yellow,
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 icon: FaIcon(
                   FontAwesomeIcons.google,
@@ -213,6 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
             IconButton(
                 onPressed: () {},
                 iconSize: 40,
+                color: Colors.blue,
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 icon: FaIcon(
                   FontAwesomeIcons.facebook,
