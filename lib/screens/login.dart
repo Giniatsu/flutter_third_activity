@@ -10,16 +10,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final List<List<String>> coffees = [
-    [
-      'assets/images/coffee-4.jpg'
-    ],
+    ['assets/images/coffee-4.jpg'],
     ['assets/images/coffee-2.jpg'],
     ['assets/images/coffee-1.jpg']
   ];
   int currentIndex = 0;
   void _next() {
     setState(() {
-      if(currentIndex < coffees.length - 1) {
+      if (currentIndex < coffees.length - 1) {
         currentIndex++;
       } else {
         currentIndex = currentIndex;
@@ -36,63 +34,100 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              onHorizontalDragEnd: (DragEndDetails details) {
-                if (details.velocity.pixelsPerSecond.dx > 0){
-                  _prev();
-                } else if (details.velocity.pixelsPerSecond.dx < 0){
-                  _next();
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * .6,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(coffees[currentIndex][0]),
-                    fit: BoxFit.cover,
-                    )
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Container(
-                      width: 90,
-                      margin: EdgeInsets.only(bottom: 60),
-                      child: Row(
-                        children: _buildIndicator(),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+    return Scaffold(body: LayoutBuilder(
+      builder: (BuildContext, BoxConstraints constraints) {
+        if (constraints.maxWidth > 650) {
+          return isLargeScreen(context);
+        } else {
+          return isSmallScreen(context);
+        }
+      },
+    ));
+  }
+
+  Widget isLargeScreen(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: Container(
+              child: mobileUI(context, MediaQuery.of(context).size.height),
             ),
-            Expanded(
-              child: Transform.translate(
-                offset: Offset(0, -40),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white
-                  ),
-                  child: loginButtons(context)
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              width: MediaQuery.of(context).size.width * .33,
+              height: MediaQuery.of(context).size.height,
+              child: loginButtons(context)
+              )
+        ],
       ),
     );
   }
 
-  Widget _indicator(bool isActive){
+  Widget isSmallScreen(BuildContext context) {
+    return Container(
+      child: mobileUI(context, MediaQuery.of(context).size.height * .6),
+    );
+  }
+
+  Widget mobileUI(BuildContext context, double height) {
+    return Column(
+        children: <Widget>[
+          GestureDetector(
+            onHorizontalDragEnd: (DragEndDetails details) {
+              if (details.velocity.pixelsPerSecond.dx > 0) {
+                _prev();
+              } else if (details.velocity.pixelsPerSecond.dx < 0) {
+                _next();
+              }
+            },
+            child: Container(
+              width: double.infinity,
+              height: height,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage(coffees[currentIndex][0]),
+                fit: BoxFit.cover,
+              )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    width: 90,
+                    margin: EdgeInsets.only(bottom: 60),
+                    child: Row(
+                      children: _buildIndicator(),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Transform.translate(
+              offset: Offset(0, -40),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(color: Colors.white),
+                child: loginButtons(context),
+              ),
+            ),
+          )
+        ],
+      );
+  }
+
+  Widget _indicator(bool isActive) {
     return Expanded(
       child: Container(
         height: 4,
@@ -105,10 +140,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  List<Widget> _buildIndicator(){
+  List<Widget> _buildIndicator() {
     List<Widget> indicators = [];
-    for(int i = 0; i < coffees.length; i++){
-      if(i == currentIndex){
+    for (int i = 0; i < coffees.length; i++) {
+      if (i == currentIndex) {
         indicators.add(_indicator(true));
       } else {
         indicators.add(_indicator(false));
@@ -138,11 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 15,
         ),
-        theButton("LOGIN", MediaQuery.of(context).size.width),
+        theButton("LOGIN", MediaQuery.of(context).size.width, Color.fromARGB(255, 239, 92, 102), Colors.white, Colors.transparent, 0),
         const SizedBox(
           height: 15,
         ),
-        theButton("SIGNUP", MediaQuery.of(context).size.width),
+        theButton("SIGNUP", MediaQuery.of(context).size.width, Colors.white, Color.fromARGB(255, 239, 92, 102), Colors.black, 2),
         const SizedBox(
           height: 15,
         ),
@@ -188,22 +223,29 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget theButton(String caption, double width) {
+  Widget theButton(String caption, double width, Color bgcolor, Color txtcolor, Color bscolor, double num) {
     return Container(
       width: width * .75,
       child: ElevatedButton(
         onPressed: () {},
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-            padding:
-                MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15.0))),
+          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
+          backgroundColor: MaterialStateProperty.all<Color>(bgcolor),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              side: BorderSide(color: bscolor, width: num),
+            ),
+          ),
+        ),
         child: Text(
           caption,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20),
+          style: TextStyle(
+            color: txtcolor,
+          ),
         ),
       ),
     );
   }
-
 }
